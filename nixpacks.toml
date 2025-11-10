@@ -1,12 +1,11 @@
 [phases.setup]
 cmds = [
     "apt-get update",
-    "apt-get install -y nginx php-fpm",
-    "php -v"
+    "apt-get install -y nginx php8.2-fpm"
 ]
 
 [phases.install]
 cmds = ["cp nginx.conf /etc/nginx/nginx.conf"]
 
 [start]
-cmd = "php-fpm -D && nginx -g 'daemon off;'"
+cmd = "service php8.2-fpm start && nginx -g 'daemon off;'"

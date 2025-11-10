@@ -1,5 +1,5 @@
 [phases.setup]
-cmds = ["apk add nginx"]
+cmds = ["apt-get update && apt-get install -y nginx"]
 
 [start]
 cmd = "nginx -c ./nginx.conf"

@@ -23,6 +23,14 @@ RUN apk add --no-cache \
 # Copy your website files including .env
 COPY . /usr/share/nginx/html/
 
+# Fix PHP-FPM configuration
+RUN echo 'listen = 127.0.0.1:9001' >> /etc/php83/php-fpm.d/www.conf
+RUN echo 'listen.allowed_clients = 127.0.0.1' >> /etc/php83/php-fpm.d/www.conf
+RUN echo 'pm.max_children = 5' >> /etc/php83/php-fpm.d/www.conf
+RUN echo 'pm.start_servers = 2' >> /etc/php83/php-fpm.d/www.conf
+RUN echo 'pm.min_spare_servers = 1' >> /etc/php83/php-fpm.d/www.conf
+RUN echo 'pm.max_spare_servers = 3' >> /etc/php83/php-fpm.d/www.conf
+
 # Create nginx config with PHP support
 RUN echo 'events { worker_connections 1024; }' > /etc/nginx/nginx.conf
 RUN echo 'http {' >> /etc/nginx/nginx.conf
@@ -42,8 +50,5 @@ RUN echo '        }' >> /etc/nginx/nginx.conf
 RUN echo '    }' >> /etc/nginx/nginx.conf
 RUN echo '}' >> /etc/nginx/nginx.conf
 
-# Configure PHP-FPM to listen on port 9001
-RUN echo 'listen = 9001' >> /etc/php83/php-fpm.d/www.conf
-
-# Start both services
-CMD sh -c "php-fpm83 -D && nginx -c /etc/nginx/nginx.conf -g 'daemon off;'"
+# Start both services with error logging
+CMD sh -c "php-fpm83 -D && echo 'PHP-FPM started' && nginx -c /etc/nginx/nginx.conf -g 'daemon off;'"

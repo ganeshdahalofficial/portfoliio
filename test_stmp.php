@@ -1,32 +1,29 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-require 'phpmailer/Exception.php';
-require 'phpmailer/PHPMailer.php';
-require 'phpmailer/SMTP.php';
+// Test basic PHP
+echo "PHP is working<br>";
 
-$mail = new PHPMailer(true);
+// Test file permissions
+echo "File permissions OK<br>";
 
-try {
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'dahalbro200@gmail.com';
-    $mail->Password = 'gntdpoznbcuyspkr';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
-    
-    $mail->setFrom('dahalbro200@gmail.com', 'Test');
-    $mail->addAddress('ganeshdahal200@gmail.com');
-    $mail->Subject = 'Test Email';
-    $mail->Body = 'This is a test email';
-    
-    $mail->send();
-    echo 'Email sent successfully';
-} catch (Exception $e) {
-    echo "Error: {$mail->ErrorInfo}";
+// Test SMTP connection
+$smtp = 'smtp.gmail.com';
+$port = 587;
+
+$connection = @fsockopen($smtp, $port, $errno, $errstr, 10);
+if ($connection) {
+    echo "SMTP connection to $smtp:$port SUCCESS<br>";
+    fclose($connection);
+} else {
+    echo "SMTP connection FAILED: $errstr ($errno)<br>";
+}
+
+// Test if we can resolve DNS
+if (gethostbyname($smtp) !== $smtp) {
+    echo "DNS resolution OK<br>";
+} else {
+    echo "DNS resolution FAILED<br>";
 }
 ?>

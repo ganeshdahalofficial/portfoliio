@@ -7,9 +7,9 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // FIXED PATHS - remove the /src/ part
-require 'phpmailer/Exception.php';
-require 'phpmailer/PHPMailer.php';
-require 'phpmailer/SMTP.php';
+require '/phpmailer/Exception.php';
+require '/phpmailer/PHPMailer.php';
+require '/phpmailer/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data

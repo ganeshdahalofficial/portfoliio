@@ -151,6 +151,38 @@
             position: relative;
             overflow: hidden;
         }
+        /* Fix for profile image container */
+.profile-img-container {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    background: linear-gradient(45deg, var(--secondary-color), var(--accent-color)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    box-shadow: var(--glow-strong);
+    animation: float 6s ease-in-out infinite;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Remove the old .profile-img styles and replace with: */
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
 
         .hero::before {
             content: '';
@@ -876,7 +908,7 @@
                         <li><a href="#experience">Experience</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li>
-                            <a href="mycv.pdf"
+                            <a href="/mycv.pdf"
                                 class="cv-download"
                                 download="Ganesh_Dahal_CV.pdf"
                                 onclick="console.log('CV downloaded')">
@@ -929,10 +961,10 @@
                         </div>
                     </div>
                     <div class="about-image">
-                        <div class="profile-img">
-                            <i class="fas fa-code"
-                                style="font-size: 8rem; color: #0a0a0a; line-height: 350px;"></i>
-                        </div>
+
+                        <img src="image.jpeg" alt="Ganesh Dahal"
+                            class="profile-photo">
+
                     </div>
                 </div>
             </div>
@@ -1026,8 +1058,13 @@
                 <div class="projects-grid">
                     <!-- Laravel Projects -->
                     <div class="project-card" data-category="laravel">
-                        <div class="project-img">
-                            <span>JobSansar Project</span>
+                        <div class="project-img" style="display: flex; flex-direction: column;">
+                            <span>
+                                JobSansar Project
+                            </span>
+                            <span style="cursor:pointer;" onclick="window.location.href='https://toptenvault.xyz'">
+                                Click to visit
+                            </span>
                         </div>
                         <div class="project-content">
                             <h3>JobSansar</h3>
@@ -1318,7 +1355,7 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
     
     const formData = new FormData(this);
     
-    fetch('send_email.php', {
+    fetch('/send_email.php', {
         method: 'POST',
         body: formData
     })

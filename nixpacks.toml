@@ -1,0 +1,5 @@
+[phases.setup]
+cmds = ["apk add nginx"]
+
+[start]
+cmd = "nginx -c ./nginx.conf"

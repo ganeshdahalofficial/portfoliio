@@ -6,10 +6,12 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-// FIXED PATHS - remove the /src/ part
 require './phpmailer/Exception.php';
 require './phpmailer/PHPMailer.php';
 require './phpmailer/SMTP.php';
+
+// Load environment variables
+$dotenv = parse_ini_file('.env');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
@@ -21,18 +23,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $mail = new PHPMailer(true);
         
-        // Server settings
+        // Server settings - USING ENVIRONMENT VARIABLES
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = $dotenv['SMTP_HOST'] ?? 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'dahalbro200@gmail.com';
-        $mail->Password = 'gntdpoznbcuyspkr';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Username = $dotenv['SMTP_USERNAME'] ?? '';
+        $mail->Password = $dotenv['SMTP_PASSWORD'] ?? '';
+        $mail->SMTPSecure = $dotenv['SMTP_ENCRYPTION'] ?? PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = $dotenv['SMTP_PORT'] ?? 587;
+        
+        // Validate required environment variables
+        if (empty($dotenv['SMTP_USERNAME']) || empty($dotenv['SMTP_PASSWORD'])) {
+            throw new Exception('SMTP configuration not set');
+        }
         
         // Recipients
-        $mail->setFrom('hello@portfolio.com', 'Portfolio Contact');
-        $mail->addAddress('ganeshdahal201@gmail.com');
+        $mail->setFrom($dotenv['SMTP_FROM_EMAIL'] ?? 'hello@portfolio.com', $dotenv['SMTP_FROM_NAME'] ?? 'Portfolio Contact');
+        $mail->addAddress($dotenv['SMTP_TO_EMAIL'] ?? 'ganeshdahal201@gmail.com');
         $mail->addReplyTo($email, $name);
         
         // Content
@@ -51,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode(['status' => 'success', 'message' => 'Message sent successfully!']);
         
     } catch (Exception $e) {
+        error_log("Mailer Error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Message could not be sent. Please try again later.']);
     }
 } else {

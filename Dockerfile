@@ -7,10 +7,10 @@ COPY . /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Install PHP and dependencies
-RUN apk add --no-cache php php-fpm
+RUN apk add --no-cache php83 php83-fpm
 
-# Create PHP-FPM config
-RUN echo 'listen = 9000' >> /etc/php8/php-fpm.d/www.conf
+# Create PHP-FPM config (correct path for PHP 8.3)
+RUN echo 'listen = 9000' >> /etc/php83/php-fpm.d/www.conf
 
 # Start both services
-CMD php-fpm8 -D && nginx -g 'daemon off;'
+CMD php-fpm83 -D && nginx -g 'daemon off;'

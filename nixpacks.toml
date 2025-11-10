@@ -1,12 +1,11 @@
 [phases.setup]
 cmds = [
     "apt-get update",
-    "apt-cache search php-fpm",
-    "apt-get install -y nginx php-fpm"
+    "apt-get install -y nginx php-fpm php"
 ]
 
 [phases.install]
 cmds = ["cp nginx.conf /etc/nginx/nginx.conf"]
 
 [start]
-cmd = "php-fpm8.1 -D && nginx -g 'daemon off;'"
+cmd = "/usr/sbin/php-fpm -D && nginx -g 'daemon off;'"
